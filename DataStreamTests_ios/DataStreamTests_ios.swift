@@ -105,16 +105,41 @@ class DataStreamTests: XCTestCase {
 
 		let readStream = DataReadStream(data: data)
 		XCTAssert(readStream.bytesAvailable == data.count)
-		do {
-			XCTAssert((try readStream.read() as Float) == Float.infinity)
-			XCTAssert((try readStream.read() as Double) == Double.infinity)
-			XCTAssert((try readStream.read() as Float) == -Float.infinity)
-			XCTAssert((try readStream.read() as Double) == -Double.infinity)
-			XCTAssert((try readStream.read() as Float).isNaN)
-			XCTAssert((try readStream.read() as Double).isNaN)
-		}
-		
+		XCTAssert((try readStream.read() as Float) == Float.infinity)
+		XCTAssert((try readStream.read() as Double) == Double.infinity)
+		XCTAssert((try readStream.read() as Float) == -Float.infinity)
+		XCTAssert((try readStream.read() as Double) == -Double.infinity)
+		XCTAssert((try readStream.read() as Float).isNaN)
+		XCTAssert((try readStream.read() as Double).isNaN)
 	}
+
+    func testEndian1() {
+		let writeStream = DataWriteStream()
+		do {
+			try writeStream.write(UInt8(0xef))
+			try writeStream.write(UInt16(0x1234))
+			try writeStream.write(UInt32(0xabcd9876))
+		}
+		catch {}
+		let data = writeStream.data!
+
+		let expected = Data(hexadecimalString: "ef 1234 abcd9876")
+		print(expected as NSData)
+		XCTAssert(data == expected)
+		
+    }
+
+    func testEndian2() {
+		let writeStream = DataWriteStream()
+		do {
+			try writeStream.write(Float(0.25))
+			try writeStream.write(Double.pi)
+		}
+		catch {}
+		let data = writeStream.data!
+		let expected = Data(hexadecimalString: "3e800000 400921fb 54442d18")
+		XCTAssert(data == expected)
+    }
 
 	
 	func testPerformanceExample() {
@@ -125,3 +150,12 @@ class DataStreamTests: XCTestCase {
 	}
 	
 }
+
+func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
+	print("*****")
+	print("\(lhs.x), \(rhs.x), \(rhs.x - lhs.x)")
+	print("\(lhs.y), \(rhs.y), \(rhs.y - lhs.y)")
+	return lhs.x == rhs.y && lhs.y == rhs.y
+	
+}
+
