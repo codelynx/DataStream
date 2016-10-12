@@ -27,7 +27,6 @@
 //
 
 import Foundation
-import CoreGraphics
 
 
 //
@@ -219,28 +218,4 @@ public class DataWriteStream {
 	public func write(_ value: Bool) throws {
 		try writeBytes(value: UInt8(value ? 0xff : 0x00))
 	}
-}
-
-
-extension DataWriteStream {
-	func write(_ value: CGFloat) throws {
-		try self.write(Float64(value))
-	}
-
-    func write(_ value: CGPoint) throws {
-        try self.write(Float64(value.x))
-        try self.write(Float64(value.y))
-    }
-}
-
-extension DataReadStream {
-	func read() throws -> CGFloat {
-		return CGFloat(try self.read() as Double)
-	}
-
-    func read() throws -> CGPoint {
-        let x = try self.readBytes() as Float64
-        let y = try self.readBytes() as Float64
-        return CGPoint(x: x, y: y)
-    }
 }

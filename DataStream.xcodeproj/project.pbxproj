@@ -13,6 +13,8 @@
 		CCABD2B41DADD359009972B4 /* DataStreamTests_ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2B31DADD359009972B4 /* DataStreamTests_ios.swift */; };
 		CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2981DADC9CF009972B4 /* DataStream.swift */; };
 		CCABD2BA1DADD39F009972B4 /* Data+hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */; };
+		CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */; };
+		CCABD2BD1DADD7F2009972B4 /* DataStream+CG.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,7 @@
 		CCABD2B11DADD359009972B4 /* DataStreamTests_ios.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataStreamTests_ios.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCABD2B31DADD359009972B4 /* DataStreamTests_ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamTests_ios.swift; sourceTree = "<group>"; };
 		CCABD2B51DADD359009972B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStream+CG.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				CCABD2981DADC9CF009972B4 /* DataStream.swift */,
+				CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */,
 			);
 			path = DataStream;
 			sourceTree = "<group>";
@@ -199,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCABD2A61DADCC30009972B4 /* DataStreamTests_mac.swift in Sources */,
+				CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */,
 				CCABD2AC1DADCCB0009972B4 /* Data+hexadecimal.swift in Sources */,
 			);
@@ -209,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCABD2B41DADD359009972B4 /* DataStreamTests_ios.swift in Sources */,
+				CCABD2BD1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */,
 				CCABD2BA1DADD39F009972B4 /* Data+hexadecimal.swift in Sources */,
 			);

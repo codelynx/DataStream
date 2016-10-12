@@ -140,6 +140,47 @@ class DataStreamTests_mac: XCTestCase {
 		let expected = Data(hexadecimalString: "3e800000 400921fb 54442d18")
 		XCTAssert(data == expected)
     }
+
+	func testCG() {
+		let writeStream = DataWriteStream()
+		do {
+			let p1 = CGPoint(x: 200, y: 300)
+			let s1 = CGSize(width: 1024, height: 768)
+		
+			try writeStream.write(p1)
+			try writeStream.write(s1)
+			let t1 = CGAffineTransform.identity.scaledBy(x: 2, y: 2).translatedBy(x: 800, y: 400).rotated(by: CGFloat.pi)
+
+			let data = writeStream.data!
+
+			let readStream = DataReadStream(data: data)
+
+			let p2 = try readStream.read() as CGPoint
+			XCTAssert(p2.x == p1.x)
+			XCTAssert(p2.y == p1.y)
+
+			let s2 = try readStream.read() as CGSize
+			XCTAssert(s2.width == s1.width)
+			XCTAssert(s2.height == s1.height)
+
+			//XCTAssert((try readStream.read() as CGAffineTransform) == t1) // somehow this fails
+			let t2 = try readStream.read() as CGAffineTransform
+			XCTAssert(t1.a == t2.a)
+			XCTAssert(t1.b == t2.b)
+			XCTAssert(t1.c == t2.c)
+			XCTAssert(t1.d == t2.d)
+			XCTAssert(t1.tx == t2.tx)
+			XCTAssert(t1.ty == t2.ty)
+			
+			// make sure same point translates to the same destination
+			let basePoint = CGPoint(x: 300, y: 200)
+			let pt1 = basePoint.applying(t1)
+			let pt2 = basePoint.applying(t2)
+			XCTAssert(pt1 == pt2)
+		}
+		catch {}
+	}
+
 	
     func testPerformanceExample() {
         // This is an example of a performance test case.
