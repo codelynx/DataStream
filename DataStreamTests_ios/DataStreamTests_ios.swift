@@ -81,9 +81,10 @@ class DataStreamTests: XCTestCase {
 		do {
 			let bytes = try readStream.read() as UInt32
 			let textData = try readStream.read(count: Int(bytes)) as Data
-			let textValue = NSString(bytes: (textData as NSData).bytes, length: textData.count, encoding: String.Encoding.utf8.rawValue)
+//			let textValue = NSString(bytes: (textData as NSData).bytes, length: textData.count, encoding: String.Encoding.utf8.rawValue)
+			let textValue = String(bytes: textData, encoding: .utf8)
 			XCTAssert(textValue != nil)
-			XCTAssert(textValue as! String == text)
+			XCTAssert(textValue == text)
 		}
 		catch { print("\(error)") }
 		
@@ -190,11 +191,8 @@ class DataStreamTests: XCTestCase {
 	
 }
 
-func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
-	print("*****")
-	print("\(lhs.x), \(rhs.x), \(rhs.x - lhs.x)")
-	print("\(lhs.y), \(rhs.y), \(rhs.y - lhs.y)")
-	return lhs.x == rhs.y && lhs.y == rhs.y
-	
+extension CGPoint {
+	static func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
+		return lhs.x == rhs.y && lhs.y == rhs.y
+	}
 }
-

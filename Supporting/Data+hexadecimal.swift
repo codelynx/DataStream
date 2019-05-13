@@ -26,7 +26,7 @@ extension Data {
 		var data = Data()
 		var count = 0
 		var byte: UInt8 = 0
-		for ch in hexadecimalString.characters {
+		for ch in hexadecimalString {
 			if let value = table[ch] {
 				if count % 2 == 0 {
 					byte = value

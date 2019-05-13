@@ -132,7 +132,7 @@ public class DataReadStream {
 			throw DataStreamError.readError
 		}
 		offset += count
-		return Data(bytes: buffer)
+		return NSData(bytesNoCopy: UnsafeMutableRawPointer(&buffer), length: count) as Data
 	}
 
 	public func read() throws -> Bool {
@@ -167,12 +167,9 @@ public class DataWriteStream {
 	public func writeBytes<T>(value: T) throws {
 		let valueSize = MemoryLayout<T>.size
 		var value = value
-		var result = false
-		let valuePointer = UnsafeMutablePointer<T>(&value)
-		let _ = valuePointer.withMemoryRebound(to: UInt8.self, capacity: valueSize) {
-			result = (outputStream.write($0, maxLength: valueSize) == valueSize)
-		}
-		if !result { throw DataStreamError.writeError }
+		let buffer = UnsafePointer<UInt8>(OpaquePointer(UnsafePointer<T>(&value)))
+		let bytesWritten = outputStream.write(buffer, maxLength: valueSize)
+		if bytesWritten != valueSize { throw DataStreamError.writeError }
 	}
 
 	public func write(_ value: Int8) throws {
@@ -209,9 +206,10 @@ public class DataWriteStream {
 	public func write(_ value: Float64) throws {
 		try writeBytes(value: CFConvertFloat64HostToSwapped(value))
 	}
+
 	public func write(_ data: Data) throws {
-		var bytesWritten = 0
-		data.withUnsafeBytes { bytesWritten = outputStream.write($0, maxLength: data.count) }
+		let buffer = UnsafePointer<UInt8>(OpaquePointer((data as NSData).bytes))
+		let bytesWritten = outputStream.write(buffer, maxLength: data.count)
 		if bytesWritten != data.count { throw DataStreamError.writeError }
 	}
 	
