@@ -83,7 +83,7 @@ class DataStreamTests: XCTestCase {
 			let textData = try readStream.read(count: Int(bytes)) as Data
 			let textValue = NSString(bytes: (textData as NSData).bytes, length: textData.count, encoding: String.Encoding.utf8.rawValue)
 			XCTAssert(textValue != nil)
-			XCTAssert(textValue as! String == text)
+			XCTAssert(textValue! as String == text)
 		}
 		catch { print("\(error)") }
 		
@@ -176,7 +176,7 @@ class DataStreamTests: XCTestCase {
 			let basePoint = CGPoint(x: 300, y: 200)
 			let pt1 = basePoint.applying(t1)
 			let pt2 = basePoint.applying(t2)
-			XCTAssert(pt1 == pt2)
+			XCTAssert(pt1.x == pt2.x && pt1.y == pt2.y)
 		}
 		catch {}
 	}
