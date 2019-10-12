@@ -44,7 +44,7 @@ enum DataStreamError: Error {
 //
 
 public class DataReadStream {
-
+	
 	private var inputStream: InputStream
 	private let bytes: Int
 	private var offset: Int = 0
@@ -54,11 +54,11 @@ public class DataReadStream {
 		self.inputStream.open()
 		self.bytes = data.count
 	}
-
+	
 	deinit {
 		self.inputStream.close()
 	}
-
+	
 	public var hasBytesAvailable: Bool {
 		return self.inputStream.hasBytesAvailable
 	}
@@ -81,14 +81,14 @@ public class DataReadStream {
 		offset += valueSize
 		return valuePointer.pointee
 	}
-
+	
 	public func read() throws -> Int8 {
 		return try self.readBytes() as Int8
 	}
 	public func read() throws -> UInt8 {
 		return try self.readBytes() as UInt8
 	}
-
+	
 	public func read() throws -> Int16 {
 		let value = try self.readBytes() as UInt16
 		return Int16(bitPattern: CFSwapInt16BigToHost(value))
@@ -97,7 +97,7 @@ public class DataReadStream {
 		let value = try self.readBytes() as UInt16
 		return CFSwapInt16BigToHost(value)
 	}
-
+	
 	public func read() throws -> Int32 {
 		let value = try self.readBytes() as UInt32
 		return Int32(bitPattern: CFSwapInt32BigToHost(value))
@@ -106,7 +106,7 @@ public class DataReadStream {
 		let value = try self.readBytes() as UInt32
 		return CFSwapInt32BigToHost(value)
 	}
-
+	
 	public func read() throws -> Int64 {
 		let value = try self.readBytes() as UInt64
 		return Int64(bitPattern: CFSwapInt64BigToHost(value))
@@ -115,17 +115,17 @@ public class DataReadStream {
 		let value = try self.readBytes() as UInt64
 		return CFSwapInt64BigToHost(value)
 	}
-
+	
 	public func read() throws -> Float {
 		let value = try self.readBytes() as CFSwappedFloat32
 		return CFConvertFloatSwappedToHost(value)
 	}
-
+	
 	public func read() throws -> Float64 {
 		let value = try self.readBytes() as CFSwappedFloat64
 		return CFConvertFloat64SwappedToHost(value)
 	}
-
+	
 	public func read(count: Int) throws -> Data {
 		var buffer = [UInt8](repeating: 0, count: count)
 		if self.inputStream.read(&buffer, maxLength: count) != count {
@@ -134,7 +134,7 @@ public class DataReadStream {
 		offset += count
 		return Data(bytes: buffer)
 	}
-
+	
 	public func read() throws -> Bool {
 		let byte = try self.read() as UInt8
 		return byte != 0
@@ -148,18 +148,18 @@ public class DataReadStream {
 
 
 public class DataWriteStream {
-
+	
 	private var outputStream: OutputStream
-
+	
 	public init() {
 		self.outputStream = OutputStream.toMemory()
 		self.outputStream.open()
 	}
-
+	
 	deinit {
 		self.outputStream.close()
 	}
-
+	
 	public var data: Data? {
 		return self.outputStream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data
 	}
@@ -174,28 +174,28 @@ public class DataWriteStream {
 		}
 		if !result { throw DataStreamError.writeError }
 	}
-
+	
 	public func write(_ value: Int8) throws {
 		try writeBytes(value: value)
 	}
 	public func write(_ value: UInt8) throws {
 		try writeBytes(value: value)
 	}
-
+	
 	public func write(_ value: Int16) throws {
 		try writeBytes(value: CFSwapInt16HostToBig(UInt16(bitPattern: value)))
 	}
 	public func write(_ value: UInt16) throws {
 		try writeBytes(value: CFSwapInt16HostToBig(value))
 	}
-
+	
 	public func write(_ value: Int32) throws {
 		try writeBytes(value: CFSwapInt32HostToBig(UInt32(bitPattern: value)))
 	}
 	public func write(_ value: UInt32) throws {
 		try writeBytes(value: CFSwapInt32HostToBig(value))
 	}
-
+	
 	public func write(_ value: Int64) throws {
 		try writeBytes(value: CFSwapInt64HostToBig(UInt64(bitPattern: value)))
 	}

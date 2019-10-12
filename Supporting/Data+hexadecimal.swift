@@ -14,7 +14,7 @@ import Foundation
 //
 
 extension Data {
-
+	
 	init(hexadecimalString: String) {
 		
 		let table: [Character : UInt8] = [
@@ -42,5 +42,5 @@ extension Data {
 		}
 		self = data
 	}
-
+	
 }
