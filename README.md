@@ -1,5 +1,7 @@
 # DataStream
 
+![swift](https://img.shields.io/badge/swift-3.0-orange.svg)  ![license](https://img.shields.io/badge/license-MIT-yellow.svg)
+
 DataStream is a Swift utility code to save or load primitives such as Int or Float.  You will have to know the format of binary image.  And reading and writing types and order must be matched, or you may not able to save and load your binary formatted data.
 
 DataStream convert integer and floating point numbers to big endian based, so should be able to exchange binary data between Mac (Intel - little endian) and iOS (ARM - big endian).
