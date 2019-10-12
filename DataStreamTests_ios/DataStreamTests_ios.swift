@@ -190,11 +190,3 @@ class DataStreamTests: XCTestCase {
 	
 }
 
-func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
-	print("*****")
-	print("\(lhs.x), \(rhs.x), \(rhs.x - lhs.x)")
-	print("\(lhs.y), \(rhs.y), \(rhs.y - lhs.y)")
-	return lhs.x == rhs.y && lhs.y == rhs.y
-	
-}
-
