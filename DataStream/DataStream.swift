@@ -132,7 +132,7 @@ public class DataReadStream {
 			throw DataStreamError.readError
 		}
 		offset += count
-		return Data(bytes: buffer)
+		return NSData(bytes: buffer, length: buffer.count) as Data
 	}
 	
 	public func read() throws -> Bool {
@@ -210,8 +210,9 @@ public class DataWriteStream {
 		try writeBytes(value: CFConvertFloat64HostToSwapped(value))
 	}
 	public func write(_ data: Data) throws {
-		var bytesWritten = 0
-		data.withUnsafeBytes { bytesWritten = outputStream.write($0, maxLength: data.count) }
+		let bytesWritten = data.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> Int in
+			return outputStream.write(Array(pointer.bindMemory(to: UInt8.self)), maxLength: data.count)
+		}
 		if bytesWritten != data.count { throw DataStreamError.writeError }
 	}
 	
