@@ -1,6 +1,9 @@
 # DataStream
 
-![swift](https://img.shields.io/badge/swift-5.1-orange.svg)  ![license](https://img.shields.io/badge/license-MIT-yellow.svg)
+![xcode](https://img.shields.io/badge/Xcode-5.1-blue)
+![swift](https://img.shields.io/badge/Swift-5.1-orange.svg)
+![license](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 
 DataStream is a Swift utility code to save or load primitives such as Int or Float.  You will have to know the format of binary image.  And reading and writing types and order must be matched, or you may not able to save and load your binary formatted data.
 
