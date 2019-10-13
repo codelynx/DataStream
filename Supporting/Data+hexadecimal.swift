@@ -1,9 +1,9 @@
 //
-//  NSData+Z.swift
-//  ZKit
+//	NSData+Z.swift
+//	ZKit
 //
-//  Created by Kaz Yoshikawa on 12/11/15.
-//  Copyright © 2015 Electricwoods LLC. All rights reserved.
+//	Created by Kaz Yoshikawa on 12/11/15.
+//	Copyright © 2015 Electricwoods LLC. All rights reserved.
 //
 
 import Foundation

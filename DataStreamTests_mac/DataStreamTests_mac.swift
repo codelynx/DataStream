@@ -1,8 +1,8 @@
 //
-//  DataStreamTests_mac.swift
-//  DataStreamTests_mac
+//	DataStreamTests_mac.swift
+//	DataStreamTests_mac
 //
-//  Created by Kaz Yoshikawa on 10/12/16.
+//	Created by Kaz Yoshikawa on 10/12/16.
 //
 //
 
