@@ -1,6 +1,6 @@
 # DataStream
 
-![xcode](https://img.shields.io/badge/Xcode-5.1-blue)
+![xcode](https://img.shields.io/badge/Xcode-11.1-blue)
 ![swift](https://img.shields.io/badge/Swift-5.1-orange.svg)
 ![license](https://img.shields.io/badge/License-MIT-yellow.svg)
 
