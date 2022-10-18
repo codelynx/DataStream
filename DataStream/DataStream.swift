@@ -69,17 +69,18 @@ public class DataReadStream {
 	
 	public func readBytes<T>() throws -> T {
 		let valueSize = MemoryLayout<T>.size
-		let valuePointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
-		var buffer = [UInt8](repeating: 0, count: MemoryLayout<T>.stride)
-		let bufferPointer = UnsafeMutablePointer<UInt8>(&buffer)
-		if self.inputStream.read(bufferPointer, maxLength: valueSize) != valueSize {
-			throw DataStreamError.readError
+		var buffer = [UInt8](repeating: 0, count: valueSize)
+		let value: T = try buffer.withUnsafeMutableBytes { mutableRawBufferPointer throws -> T in
+			let bufferPointer: UnsafeMutablePointer<UInt8> = mutableRawBufferPointer.baseAddress!.assumingMemoryBound(to: UInt8.self)
+			if self.inputStream.read(bufferPointer, maxLength: valueSize) != valueSize {
+				throw DataStreamError.readError
+			}
+			return bufferPointer.withMemoryRebound(to: T.self, capacity: 1) {
+				return $0.pointee
+			}
 		}
-		bufferPointer.withMemoryRebound(to: T.self, capacity: 1) {
-			valuePointer.pointee = $0.pointee
-		}
-		offset += valueSize
-		return valuePointer.pointee
+		self.offset += valueSize
+		return value
 	}
 	
 	public func read() throws -> Int8 {
@@ -167,10 +168,9 @@ public class DataWriteStream {
 	public func writeBytes<T>(value: T) throws {
 		let valueSize = MemoryLayout<T>.size
 		var value = value
-		var result = false
-		let valuePointer = UnsafeMutablePointer<T>(&value)
-		let _ = valuePointer.withMemoryRebound(to: UInt8.self, capacity: valueSize) {
-			result = (outputStream.write($0, maxLength: valueSize) == valueSize)
+		let result = withUnsafeBytes(of: &value) { rawBufferPointer in
+			let pointer: UnsafePointer<UInt8> = rawBufferPointer.baseAddress!.assumingMemoryBound(to: UInt8.self)
+			return (outputStream.write(pointer, maxLength: valueSize) == valueSize)
 		}
 		if !result { throw DataStreamError.writeError }
 	}
