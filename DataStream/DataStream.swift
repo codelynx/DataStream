@@ -178,7 +178,7 @@ public class DataWriteStream {
 		return self.outputStream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data
 	}
 	
-	public func writeBytes<T>(value: T) throws {
+	public func writeBytes<T>(_ value: T) throws {
 		let valueSize = MemoryLayout<T>.size
 		var value = value
 		let result = withUnsafeBytes(of: &value) { rawBufferPointer in
@@ -189,38 +189,38 @@ public class DataWriteStream {
 	}
 	
 	public func write(_ value: Int8) throws {
-		try writeBytes(value: value)
+		try writeBytes(value)
 	}
 	public func write(_ value: UInt8) throws {
-		try writeBytes(value: value)
+		try writeBytes(value)
 	}
 	
 	public func write(_ value: Int16) throws {
-		try writeBytes(value: CFSwapInt16HostToBig(UInt16(bitPattern: value)))
+		try writeBytes(CFSwapInt16HostToBig(UInt16(bitPattern: value)))
 	}
 	public func write(_ value: UInt16) throws {
-		try writeBytes(value: CFSwapInt16HostToBig(value))
+		try writeBytes(CFSwapInt16HostToBig(value))
 	}
 	
 	public func write(_ value: Int32) throws {
-		try writeBytes(value: CFSwapInt32HostToBig(UInt32(bitPattern: value)))
+		try writeBytes(CFSwapInt32HostToBig(UInt32(bitPattern: value)))
 	}
 	public func write(_ value: UInt32) throws {
-		try writeBytes(value: CFSwapInt32HostToBig(value))
+		try writeBytes(CFSwapInt32HostToBig(value))
 	}
 	
 	public func write(_ value: Int64) throws {
-		try writeBytes(value: CFSwapInt64HostToBig(UInt64(bitPattern: value)))
+		try writeBytes(CFSwapInt64HostToBig(UInt64(bitPattern: value)))
 	}
 	public func write(_ value: UInt64) throws {
-		try writeBytes(value: CFSwapInt64HostToBig(value))
+		try writeBytes(CFSwapInt64HostToBig(value))
 	}
 	
 	public func write(_ value: Float32) throws {
-		try writeBytes(value: CFConvertFloatHostToSwapped(value))
+		try writeBytes(CFConvertFloatHostToSwapped(value))
 	}
 	public func write(_ value: Float64) throws {
-		try writeBytes(value: CFConvertFloat64HostToSwapped(value))
+		try writeBytes(CFConvertFloat64HostToSwapped(value))
 	}
 	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 	public func write(_ value: Float16) throws {
@@ -239,7 +239,7 @@ public class DataWriteStream {
 	}
 	
 	public func write(_ value: Bool) throws {
-		try writeBytes(value: UInt8(value ? 0xff : 0x00))
+		try writeBytes(UInt8(value ? 0xff : 0x00))
 	}
 }
 
