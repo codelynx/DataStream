@@ -29,6 +29,11 @@
 import Foundation
 
 
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+extension Float16: DataRepresentable {
+}
+
+
 //
 //	DataStreamError
 //
@@ -121,10 +126,18 @@ public class DataReadStream {
 		let value = try self.readBytes() as CFSwappedFloat32
 		return CFConvertFloatSwappedToHost(value)
 	}
-	
 	public func read() throws -> Float64 {
 		let value = try self.readBytes() as CFSwappedFloat64
 		return CFConvertFloat64SwappedToHost(value)
+	}
+	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+	public func read() throws -> Float16 {
+		let binary = try self.read(count: MemoryLayout<Float16>.size)
+		return try binary.instanciate(as: Float16.self)
+	}
+	public func read<T: DataRepresentable>() throws -> T {
+		let binary = try self.read(count: MemoryLayout<T>.size)
+		return try binary.instanciate(as: T.self)
 	}
 	
 	public func read(count: Int) throws -> Data {
@@ -209,6 +222,15 @@ public class DataWriteStream {
 	public func write(_ value: Float64) throws {
 		try writeBytes(value: CFConvertFloat64HostToSwapped(value))
 	}
+	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+	public func write(_ value: Float16) throws {
+		let binary = value.dataRepresentation
+		try self.write(binary)
+	}
+	public func write<T: DataRepresentable>(_ value: T) throws {
+		let binary = value.dataRepresentation
+		try self.write(binary)
+	}
 	public func write(_ data: Data) throws {
 		let bytesWritten = data.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> Int in
 			return outputStream.write(Array(pointer.bindMemory(to: UInt8.self)), maxLength: data.count)
@@ -220,3 +242,4 @@ public class DataWriteStream {
 		try writeBytes(value: UInt8(value ? 0xff : 0x00))
 	}
 }
+

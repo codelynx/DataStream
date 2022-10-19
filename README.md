@@ -1,7 +1,7 @@
 # DataStream
 
-![xcode](https://img.shields.io/badge/Xcode-11.1-blue)
-![swift](https://img.shields.io/badge/Swift-5.1-orange.svg)
+![xcode](https://img.shields.io/badge/Xcode-14-blue.svg)
+![swift](https://img.shields.io/badge/Swift-5.7-orange.svg)
 ![license](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 
@@ -86,6 +86,48 @@ You may also like to know if the read stream is at end or not.
 ```.swift
 	while readStream.hasBytesAvailable {
 		// read more
+	}
+```
+
+### Custom Data
+
+When you would like to write and to read fixed sized structured data, you may conform those structs to `DataRepresentable`, or to provide extension to conform `DataRepresentable` like following code.  
+Although 
+
+```.swift
+	struct RGB8: DataRepresentable {
+		var r: UInt8
+		var g: UInt8
+		var b: UInt8
+		var a: UInt8
+	}
+	
+	extension CLLocationCoordinate2D: DataRepresentable {
+	}
+```
+
+You may write them with the following code.
+
+```.swift
+	let rgb8: RGB8 = ...
+	let location: CLLocationCoordinate2D = ...
+	try writeStream.write(rgb8)
+	try writeStream.write(location)
+```
+
+Then you may read with the following code.
+
+```.swift
+	let rgba8 = try readStream.read() as RGBA8
+	let location2d = try readStream.read(count: length) as CLLocationCoordinate2D
+```
+
+Be aware that struct contains string, classes or other non-fixed data format.
+
+```.swift
+	struct Foo: DataRepresentable {
+		var name: String  // `String` is not appropriate for `DataRepresentable`
+		var number: NSNumber  // `class` is not appropriate for `DataRepresentable`
 	}
 ```
 

@@ -10,6 +10,16 @@ import XCTest
 
 class DataStreamTests_mac: XCTestCase {
 	
+	struct RGBA8: DataRepresentable, Equatable {
+		var r: UInt8
+		var g: UInt8
+		var b: UInt8
+		var a: UInt8
+		static func == (lhs: RGBA8, rhs: RGBA8) -> Bool {
+			return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a
+		}
+	}
+	
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -23,6 +33,7 @@ class DataStreamTests_mac: XCTestCase {
 	func testBasic1() {
 		
 		let writeStream = DataWriteStream()
+		let rgba8 = RGBA8(r: 51, g: 65, b: 129, a: 254)
 		do {
 			try writeStream.write(UInt8(0x01))
 			try writeStream.write(UInt16(0x2345))
@@ -34,6 +45,10 @@ class DataStreamTests_mac: XCTestCase {
 			
 			try writeStream.write(Float(0.5))
 			try writeStream.write(Double.pi)
+			if #available(macOS 11.0, *) {
+				try writeStream.write(Float16.pi)
+			}
+			try writeStream.write(rgba8)
 			
 			try writeStream.write(true)
 			try writeStream.write(false)
@@ -41,7 +56,11 @@ class DataStreamTests_mac: XCTestCase {
 		}
 		catch { print("\(error)") }
 		let data = writeStream.data!
-		XCTAssert(data.count == 1 + 2 + 4 + 1 + 2 + 4 + 4 + 8 + 1 + 1)
+		let extraBytes: Int = {
+			if #available(macOS 11.0, *) { return MemoryLayout<Float16>.size }
+			else { return 0 }
+		}()
+		XCTAssert(data.count == 1 + 2 + 4 + 1 + 2 + 4 + 4 + 8 + 4 + 1 + 1 + extraBytes)
 		
 		let readStream = DataReadStream(data: data)
 		XCTAssert(readStream.bytesAvailable == data.count)
@@ -56,6 +75,10 @@ class DataStreamTests_mac: XCTestCase {
 			
 			XCTAssert((try readStream.read() as Float) == 0.5)
 			XCTAssert((try readStream.read() as Double) == Double.pi)
+			if #available(macOS 11, *) {
+				XCTAssert((try readStream.read() as Float16) == Float16.pi)
+			}
+			XCTAssert((try readStream.read() as RGBA8) == rgba8)
 			
 			XCTAssert((try readStream.read() as Bool) == true)
 			XCTAssert((try readStream.read() as Bool) == false)

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
+		CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
 		CCABD2A61DADCC30009972B4 /* DataStreamTests_mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2A51DADCC30009972B4 /* DataStreamTests_mac.swift */; };
 		CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2981DADC9CF009972B4 /* DataStream.swift */; };
 		CCABD2AC1DADCCB0009972B4 /* Data+hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */; };
@@ -19,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		CC7C513E1DAD573100E83DF2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CCA95BB528FF408700E54915 /* DataRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepresentable.swift; sourceTree = "<group>"; };
 		CCABD2981DADC9CF009972B4 /* DataStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStream.swift; sourceTree = "<group>"; };
 		CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+hexadecimal.swift"; sourceTree = "<group>"; };
 		CCABD2A31DADCC30009972B4 /* DataStreamTests_mac.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataStreamTests_mac.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +77,7 @@
 			children = (
 				CCABD2981DADC9CF009972B4 /* DataStream.swift */,
 				CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */,
+				CCA95BB528FF408700E54915 /* DataRepresentable.swift */,
 			);
 			path = DataStream;
 			sourceTree = "<group>";
@@ -148,12 +152,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					CCABD2A21DADCC30009972B4 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 2P97EM4L4N;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = "";
 						ProvisioningStyle = Automatic;
 					};
 					CCABD2B01DADD359009972B4 = {
@@ -166,10 +170,11 @@
 			};
 			buildConfigurationList = CC7C511B1DAD44BE00E83DF2 /* Build configuration list for PBXProject "DataStream" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CC7C51171DAD44BE00E83DF2;
 			productRefGroup = CC7C51241DAD4A8600E83DF2 /* Products */;
@@ -204,6 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */,
 				CCABD2A61DADCC30009972B4 /* DataStreamTests_mac.swift in Sources */,
 				CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */,
@@ -215,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */,
 				CCABD2B41DADD359009972B4 /* DataStreamTests_ios.swift in Sources */,
 				CCABD2BD1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */,
@@ -228,6 +235,7 @@
 		CC7C511C1DAD44BE00E83DF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -240,11 +248,13 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -261,6 +271,7 @@
 		CC7C511D1DAD44BE00E83DF2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -273,11 +284,13 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -313,6 +326,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 2P97EM4L4N;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -342,7 +356,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -370,6 +384,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 2P97EM4L4N;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -391,7 +406,7 @@
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -437,7 +452,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = DataStreamTests_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -487,7 +502,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = DataStreamTests_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.electricwoods.DataStreamTests-ios";
