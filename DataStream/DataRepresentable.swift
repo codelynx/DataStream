@@ -18,7 +18,7 @@ public protocol DataRepresentable {
 public extension DataRepresentable {
 	var dataRepresentation: Data {
 		var value: Self = self
-		return Data(bytes: &value, count: MemoryLayout<Self>.size)
+		return withUnsafeBytes(of: &value) { Data($0) }
 	}
 }
 
