@@ -6,7 +6,7 @@
 
 DataStream is a small Swift utility for writing and reading primitives such as `Int32` or `Float` to and from binary `Data`. There is no header or schema in the output, so the types and their order must match exactly between writing and reading.
 
-All integers and floating point values are stored in big-endian byte order regardless of the host, so data written on one platform can be read on another, or by other tools that understand the layout below.
+All integers and floating point values are stored in big-endian byte order by default, regardless of the host, so data written on one platform can be read on another, or by other tools that understand the layout below. Little-endian can be chosen per stream.
 
 ## Requirements
 
@@ -33,21 +33,21 @@ Or in Xcode, choose File > Add Package Dependencies… and enter the repository 
 | Type | Bytes | Encoding |
 |---|---|---|
 | `Int8`, `UInt8` | 1 | as is |
-| `Int16`, `UInt16` | 2 | big-endian |
-| `Int32`, `UInt32` | 4 | big-endian |
-| `Int64`, `UInt64` | 8 | big-endian |
-| `Float` | 4 | IEEE 754 single, big-endian |
-| `Double` | 8 | IEEE 754 double, big-endian |
+| `Int16`, `UInt16` | 2 | stream byte order |
+| `Int32`, `UInt32` | 4 | stream byte order |
+| `Int64`, `UInt64` | 8 | stream byte order |
+| `Float16` | 2 | IEEE 754 half, stream byte order |
+| `Float` | 4 | IEEE 754 single, stream byte order |
+| `Double` | 8 | IEEE 754 double, stream byte order |
 | `Bool` | 1 | `0xff` for true, `0x00` for false; any non-zero byte reads as true |
 | `Data` | count | as is, no length prefix |
 | `CGFloat` | 8 | always written as `Double` |
 | `CGPoint` | 16 | `x`, `y` as `Double` |
 | `CGSize` | 16 | `width`, `height` as `Double` |
 | `CGAffineTransform` | 48 | `a`, `b`, `c`, `d`, `tx`, `ty` as `Double` |
-| `Float16` | 2 | raw memory, host byte order |
 | `DataRepresentable` | `MemoryLayout<T>.size` | raw memory, host byte order |
 
-Signed integers use two's complement. `Float16` is available where the platform provides it, which excludes Intel Macs. The CoreGraphics types are available where CoreGraphics can be imported.
+Signed integers use two's complement. The stream byte order is big-endian unless a stream is created with `.littleEndian`. `Float16` is available where the platform provides it, which excludes Intel Macs. The CoreGraphics types are available where CoreGraphics can be imported.
 
 ## Writing
 
@@ -98,6 +98,20 @@ do {
 }
 catch { ... }
 ```
+
+## Byte Order
+
+Both streams take an optional byte order. The default is big-endian. Use little-endian to read or write formats defined that way, such as WAV or BMP headers.
+
+```swift
+let writeStream = DataWriteStream(byteOrder: .littleEndian)
+try writeStream.write(UInt32(0x12345678)) // 78 56 34 12
+
+let readStream = DataReadStream(data: data, byteOrder: .littleEndian)
+let value = try readStream.read() as UInt32
+```
+
+The setting applies to every multi-byte integer and floating point value, including the CoreGraphics types. Single bytes, `Data`, and `DataRepresentable` values are unaffected.
 
 ## Errors
 

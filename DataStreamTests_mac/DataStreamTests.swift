@@ -126,15 +126,29 @@ class DataStreamTests: XCTestCase {
 	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 	func testFloat16RoundTrip() throws {
 		guard #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) else { return }
-		let writeStream = DataWriteStream()
-		try writeStream.write(Float16.pi)
-		try writeStream.write(Float16(-0.25))
-		let data = try XCTUnwrap(writeStream.data)
-		XCTAssertEqual(data.count, MemoryLayout<Float16>.size * 2)
+		for byteOrder in [ByteOrder.bigEndian, .littleEndian] {
+			let writeStream = DataWriteStream(byteOrder: byteOrder)
+			try writeStream.write(Float16.pi)
+			try writeStream.write(Float16(-0.25))
+			let data = try XCTUnwrap(writeStream.data)
+			XCTAssertEqual(data.count, MemoryLayout<Float16>.size * 2)
+			
+			let readStream = DataReadStream(data: data, byteOrder: byteOrder)
+			XCTAssertEqual(try readStream.read() as Float16, Float16.pi)
+			XCTAssertEqual(try readStream.read() as Float16, Float16(-0.25))
+		}
+	}
+	
+	func testFloat16ByteOrder() throws {
+		guard #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) else { return }
+		// Float16.pi has bit pattern 0x4248
+		let bigStream = DataWriteStream(byteOrder: .bigEndian)
+		try bigStream.write(Float16.pi)
+		XCTAssertEqual(bigStream.data, Data(hexadecimalString: "4248"))
 		
-		let readStream = DataReadStream(data: data)
-		XCTAssertEqual(try readStream.read() as Float16, Float16.pi)
-		XCTAssertEqual(try readStream.read() as Float16, Float16(-0.25))
+		let littleStream = DataWriteStream(byteOrder: .littleEndian)
+		try littleStream.write(Float16.pi)
+		XCTAssertEqual(littleStream.data, Data(hexadecimalString: "4842"))
 	}
 	#endif
 	
@@ -162,6 +176,54 @@ class DataStreamTests: XCTestCase {
 		
 		let expected = Data(hexadecimalString: "3e800000 400921fb54442d18")
 		XCTAssertEqual(data, expected)
+	}
+	
+	func testLittleEndianByteOrder() throws {
+		let writeStream = DataWriteStream(byteOrder: .littleEndian)
+		try writeStream.write(UInt8(0xef))
+		try writeStream.write(UInt16(0x1234))
+		try writeStream.write(UInt32(0xabcd9876))
+		try writeStream.write(UInt64(0x0123456789abcdef))
+		try writeStream.write(Int16(-2))
+		try writeStream.write(Float(0.25))
+		try writeStream.write(Double.pi)
+		let data = try XCTUnwrap(writeStream.data)
+		
+		let expected = Data(hexadecimalString: "ef 3412 7698cdab efcdab8967452301 feff 0000803e 182d4454fb210940")
+		XCTAssertEqual(data, expected)
+	}
+	
+	func testLittleEndianRoundTrip() throws {
+		let writeStream = DataWriteStream(byteOrder: .littleEndian)
+		try writeStream.write(UInt16(0x2345))
+		try writeStream.write(Int32(-100_000))
+		try writeStream.write(UInt64(0x0123456789abcdef))
+		try writeStream.write(Float(0.5))
+		try writeStream.write(Double.pi)
+		let data = try XCTUnwrap(writeStream.data)
+		
+		let readStream = DataReadStream(data: data, byteOrder: .littleEndian)
+		XCTAssertEqual(readStream.byteOrder, .littleEndian)
+		XCTAssertEqual(try readStream.read() as UInt16, 0x2345)
+		XCTAssertEqual(try readStream.read() as Int32, -100_000)
+		XCTAssertEqual(try readStream.read() as UInt64, 0x0123456789abcdef)
+		XCTAssertEqual(try readStream.read() as Float, 0.5)
+		XCTAssertEqual(try readStream.read() as Double, Double.pi)
+		XCTAssertFalse(readStream.hasBytesAvailable)
+	}
+	
+	func testByteOrderMismatch() throws {
+		let writeStream = DataWriteStream(byteOrder: .bigEndian)
+		try writeStream.write(UInt16(0x1234))
+		let data = try XCTUnwrap(writeStream.data)
+		
+		let readStream = DataReadStream(data: data, byteOrder: .littleEndian)
+		XCTAssertEqual(try readStream.read() as UInt16, 0x3412)
+	}
+	
+	func testDefaultByteOrderIsBigEndian() {
+		XCTAssertEqual(DataWriteStream().byteOrder, .bigEndian)
+		XCTAssertEqual(DataReadStream(data: Data()).byteOrder, .bigEndian)
 	}
 	
 	func testBoolEncoding() throws {

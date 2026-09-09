@@ -29,12 +29,14 @@
 import Foundation
 
 
-// Float16 is unavailable on Intel macOS.
-#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
-@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-extension Float16: DataRepresentable {
+//
+//	ByteOrder
+//
+
+public enum ByteOrder {
+	case bigEndian
+	case littleEndian
 }
-#endif
 
 
 //
@@ -56,11 +58,13 @@ public class DataReadStream {
 	private var inputStream: InputStream
 	private let bytes: Int
 	private var offset: Int = 0
+	public let byteOrder: ByteOrder
 	
-	public init(data: Data) {
+	public init(data: Data, byteOrder: ByteOrder = .bigEndian) {
 		self.inputStream = InputStream(data: data)
 		self.inputStream.open()
 		self.bytes = data.count
+		self.byteOrder = byteOrder
 	}
 	
 	deinit {
@@ -91,6 +95,14 @@ public class DataReadStream {
 		return value
 	}
 	
+	private func readInteger<T: FixedWidthInteger>() throws -> T {
+		let raw = try self.readBytes() as T
+		switch self.byteOrder {
+		case .bigEndian: return T(bigEndian: raw)
+		case .littleEndian: return T(littleEndian: raw)
+		}
+	}
+	
 	public func read() throws -> Int8 {
 		return try self.readBytes() as Int8
 	}
@@ -99,45 +111,36 @@ public class DataReadStream {
 	}
 	
 	public func read() throws -> Int16 {
-		let value = try self.readBytes() as UInt16
-		return Int16(bitPattern: CFSwapInt16BigToHost(value))
+		return try self.readInteger()
 	}
 	public func read() throws -> UInt16 {
-		let value = try self.readBytes() as UInt16
-		return CFSwapInt16BigToHost(value)
+		return try self.readInteger()
 	}
 	
 	public func read() throws -> Int32 {
-		let value = try self.readBytes() as UInt32
-		return Int32(bitPattern: CFSwapInt32BigToHost(value))
+		return try self.readInteger()
 	}
 	public func read() throws -> UInt32 {
-		let value = try self.readBytes() as UInt32
-		return CFSwapInt32BigToHost(value)
+		return try self.readInteger()
 	}
 	
 	public func read() throws -> Int64 {
-		let value = try self.readBytes() as UInt64
-		return Int64(bitPattern: CFSwapInt64BigToHost(value))
+		return try self.readInteger()
 	}
 	public func read() throws -> UInt64 {
-		let value = try self.readBytes() as UInt64
-		return CFSwapInt64BigToHost(value)
+		return try self.readInteger()
 	}
 	
 	public func read() throws -> Float {
-		let value = try self.readBytes() as CFSwappedFloat32
-		return CFConvertFloatSwappedToHost(value)
+		return Float(bitPattern: try self.readInteger())
 	}
-	public func read() throws -> Float64 {
-		let value = try self.readBytes() as CFSwappedFloat64
-		return CFConvertFloat64SwappedToHost(value)
+	public func read() throws -> Double {
+		return Double(bitPattern: try self.readInteger())
 	}
 	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 	public func read() throws -> Float16 {
-		let binary = try self.read(count: MemoryLayout<Float16>.size)
-		return try binary.instanciate(as: Float16.self)
+		return Float16(bitPattern: try self.readInteger())
 	}
 	#endif
 	public func read<T: DataRepresentable>() throws -> T {
@@ -169,10 +172,12 @@ public class DataReadStream {
 public class DataWriteStream {
 	
 	private var outputStream: OutputStream
+	public let byteOrder: ByteOrder
 	
-	public init() {
+	public init(byteOrder: ByteOrder = .bigEndian) {
 		self.outputStream = OutputStream.toMemory()
 		self.outputStream.open()
+		self.byteOrder = byteOrder
 	}
 	
 	deinit {
@@ -193,6 +198,13 @@ public class DataWriteStream {
 		if !result { throw DataStreamError.writeError }
 	}
 	
+	private func writeInteger<T: FixedWidthInteger>(_ value: T) throws {
+		switch self.byteOrder {
+		case .bigEndian: try self.writeBytes(value.bigEndian)
+		case .littleEndian: try self.writeBytes(value.littleEndian)
+		}
+	}
+	
 	public func write(_ value: Int8) throws {
 		try writeBytes(value)
 	}
@@ -201,37 +213,36 @@ public class DataWriteStream {
 	}
 	
 	public func write(_ value: Int16) throws {
-		try writeBytes(CFSwapInt16HostToBig(UInt16(bitPattern: value)))
+		try writeInteger(value)
 	}
 	public func write(_ value: UInt16) throws {
-		try writeBytes(CFSwapInt16HostToBig(value))
+		try writeInteger(value)
 	}
 	
 	public func write(_ value: Int32) throws {
-		try writeBytes(CFSwapInt32HostToBig(UInt32(bitPattern: value)))
+		try writeInteger(value)
 	}
 	public func write(_ value: UInt32) throws {
-		try writeBytes(CFSwapInt32HostToBig(value))
+		try writeInteger(value)
 	}
 	
 	public func write(_ value: Int64) throws {
-		try writeBytes(CFSwapInt64HostToBig(UInt64(bitPattern: value)))
+		try writeInteger(value)
 	}
 	public func write(_ value: UInt64) throws {
-		try writeBytes(CFSwapInt64HostToBig(value))
+		try writeInteger(value)
 	}
 	
-	public func write(_ value: Float32) throws {
-		try writeBytes(CFConvertFloatHostToSwapped(value))
+	public func write(_ value: Float) throws {
+		try writeInteger(value.bitPattern)
 	}
-	public func write(_ value: Float64) throws {
-		try writeBytes(CFConvertFloat64HostToSwapped(value))
+	public func write(_ value: Double) throws {
+		try writeInteger(value.bitPattern)
 	}
 	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 	public func write(_ value: Float16) throws {
-		let binary = value.dataRepresentation
-		try self.write(binary)
+		try writeInteger(value.bitPattern)
 	}
 	#endif
 	public func write<T: DataRepresentable>(_ value: T) throws {
@@ -249,4 +260,3 @@ public class DataWriteStream {
 		try writeBytes(UInt8(value ? 0xff : 0x00))
 	}
 }
-
