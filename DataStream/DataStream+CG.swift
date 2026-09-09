@@ -25,27 +25,29 @@
 //	THE SOFTWARE.
 //
 
+#if canImport(CoreGraphics)
+
 import Foundation
 import CoreGraphics
 
 
 extension DataWriteStream {
 	
-	func write(_ value: CGFloat) throws {
+	public func write(_ value: CGFloat) throws {
 		try self.write(Float64(value))
 	}
 	
-	func write(_ value: CGPoint) throws {
+	public func write(_ value: CGPoint) throws {
 		try self.write(Float64(value.x))
 		try self.write(Float64(value.y))
 	}
 	
-	func write(_ value: CGSize) throws {
+	public func write(_ value: CGSize) throws {
 		try self.write(Float64(value.width))
 		try self.write(Float64(value.height))
 	}
 	
-	func write(_ value: CGAffineTransform) throws {
+	public func write(_ value: CGAffineTransform) throws {
 		try self.write(Float64(value.a))
 		try self.write(Float64(value.b))
 		try self.write(Float64(value.c))
@@ -58,23 +60,23 @@ extension DataWriteStream {
 
 extension DataReadStream {
 	
-	func read() throws -> CGFloat {
+	public func read() throws -> CGFloat {
 		return CGFloat(try self.read() as Double)
 	}
 	
-	func read() throws -> CGPoint {
+	public func read() throws -> CGPoint {
 		let x = try self.read() as Float64
 		let y = try self.read() as Float64
 		return CGPoint(x: x, y: y)
 	}
 	
-	func read() throws -> CGSize {
+	public func read() throws -> CGSize {
 		let width = try self.read() as Float64
 		let height = try self.read() as Float64
 		return CGSize(width: width, height: height)
 	}
 	
-	func read() throws -> CGAffineTransform {
+	public func read() throws -> CGAffineTransform {
 		var transform = CGAffineTransform.identity
 		transform.a = try self.read() as CGFloat
 		transform.b = try self.read() as CGFloat
@@ -86,3 +88,5 @@ extension DataReadStream {
 	}
 	
 }
+
+#endif

@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
 		CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
-		CCABD2A61DADCC30009972B4 /* DataStreamTests_mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2A51DADCC30009972B4 /* DataStreamTests_mac.swift */; };
+		CCABD2A61DADCC30009972B4 /* DataStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2A51DADCC30009972B4 /* DataStreamTests.swift */; };
 		CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2981DADC9CF009972B4 /* DataStream.swift */; };
 		CCABD2AC1DADCCB0009972B4 /* Data+hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */; };
-		CCABD2B41DADD359009972B4 /* DataStreamTests_ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2B31DADD359009972B4 /* DataStreamTests_ios.swift */; };
+		CCABD2B41DADD359009972B4 /* DataStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2A51DADCC30009972B4 /* DataStreamTests.swift */; };
 		CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2981DADC9CF009972B4 /* DataStream.swift */; };
 		CCABD2BA1DADD39F009972B4 /* Data+hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */; };
 		CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */; };
@@ -25,10 +25,9 @@
 		CCABD2981DADC9CF009972B4 /* DataStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStream.swift; sourceTree = "<group>"; };
 		CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+hexadecimal.swift"; sourceTree = "<group>"; };
 		CCABD2A31DADCC30009972B4 /* DataStreamTests_mac.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataStreamTests_mac.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCABD2A51DADCC30009972B4 /* DataStreamTests_mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamTests_mac.swift; sourceTree = "<group>"; };
+		CCABD2A51DADCC30009972B4 /* DataStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamTests.swift; sourceTree = "<group>"; };
 		CCABD2A71DADCC30009972B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CCABD2B11DADD359009972B4 /* DataStreamTests_ios.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataStreamTests_ios.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCABD2B31DADD359009972B4 /* DataStreamTests_ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamTests_ios.swift; sourceTree = "<group>"; };
 		CCABD2B51DADD359009972B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStream+CG.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -56,7 +55,6 @@
 			children = (
 				CC7C513E1DAD573100E83DF2 /* README.md */,
 				CCABD2971DADC9CF009972B4 /* DataStream */,
-				CCABD29B1DADCA17009972B4 /* Supporting */,
 				CCABD2A41DADCC30009972B4 /* DataStreamTests_mac */,
 				CCABD2B21DADD359009972B4 /* DataStreamTests_ios */,
 				CC7C51241DAD4A8600E83DF2 /* Products */,
@@ -82,18 +80,11 @@
 			path = DataStream;
 			sourceTree = "<group>";
 		};
-		CCABD29B1DADCA17009972B4 /* Supporting */ = {
-			isa = PBXGroup;
-			children = (
-				CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */,
-			);
-			path = Supporting;
-			sourceTree = "<group>";
-		};
 		CCABD2A41DADCC30009972B4 /* DataStreamTests_mac */ = {
 			isa = PBXGroup;
 			children = (
-				CCABD2A51DADCC30009972B4 /* DataStreamTests_mac.swift */,
+				CCABD2A51DADCC30009972B4 /* DataStreamTests.swift */,
+				CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */,
 				CCABD2A71DADCC30009972B4 /* Info.plist */,
 			);
 			path = DataStreamTests_mac;
@@ -102,7 +93,6 @@
 		CCABD2B21DADD359009972B4 /* DataStreamTests_ios */ = {
 			isa = PBXGroup;
 			children = (
-				CCABD2B31DADD359009972B4 /* DataStreamTests_ios.swift */,
 				CCABD2B51DADD359009972B4 /* Info.plist */,
 			);
 			path = DataStreamTests_ios;
@@ -211,7 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */,
-				CCABD2A61DADCC30009972B4 /* DataStreamTests_mac.swift in Sources */,
+				CCABD2A61DADCC30009972B4 /* DataStreamTests.swift in Sources */,
 				CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */,
 				CCABD2AC1DADCCB0009972B4 /* Data+hexadecimal.swift in Sources */,
@@ -223,7 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */,
-				CCABD2B41DADD359009972B4 /* DataStreamTests_ios.swift in Sources */,
+				CCABD2B41DADD359009972B4 /* DataStreamTests.swift in Sources */,
 				CCABD2BD1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */,
 				CCABD2BA1DADD39F009972B4 /* Data+hexadecimal.swift in Sources */,

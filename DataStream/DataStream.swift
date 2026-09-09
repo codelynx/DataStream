@@ -29,16 +29,19 @@
 import Foundation
 
 
+// Float16 is unavailable on Intel macOS.
+#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 extension Float16: DataRepresentable {
 }
+#endif
 
 
 //
 //	DataStreamError
 //
 
-enum DataStreamError: Error {
+public enum DataStreamError: Error {
 	case readError
 	case writeError
 }
@@ -130,11 +133,13 @@ public class DataReadStream {
 		let value = try self.readBytes() as CFSwappedFloat64
 		return CFConvertFloat64SwappedToHost(value)
 	}
+	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 	public func read() throws -> Float16 {
 		let binary = try self.read(count: MemoryLayout<Float16>.size)
 		return try binary.instanciate(as: Float16.self)
 	}
+	#endif
 	public func read<T: DataRepresentable>() throws -> T {
 		let binary = try self.read(count: MemoryLayout<T>.size)
 		return try binary.instanciate(as: T.self)
@@ -222,11 +227,13 @@ public class DataWriteStream {
 	public func write(_ value: Float64) throws {
 		try writeBytes(CFConvertFloat64HostToSwapped(value))
 	}
+	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
 	@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 	public func write(_ value: Float16) throws {
 		let binary = value.dataRepresentation
 		try self.write(binary)
 	}
+	#endif
 	public func write<T: DataRepresentable>(_ value: T) throws {
 		let binary = value.dataRepresentation
 		try self.write(binary)

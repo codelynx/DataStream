@@ -15,3 +15,5 @@ DerivedData
 *.moved-aside
 .Trashes
 ._*
+.build/
+.swiftpm/
