@@ -19,7 +19,7 @@ Add the package to your `Package.swift`:
 
 ```swift
 dependencies: [
-	.package(url: "https://github.com/codelynx/DataStream.git", branch: "master"),
+	.package(url: "https://github.com/codelynx/DataStream.git", from: "1.0.0"),
 ],
 targets: [
 	.target(name: "MyTarget", dependencies: ["DataStream"]),
