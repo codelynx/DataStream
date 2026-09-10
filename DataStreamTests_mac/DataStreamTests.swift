@@ -13,19 +13,6 @@ import XCTest
 
 class DataStreamTests: XCTestCase {
 	
-	struct RGBA8: DataRepresentable, Equatable {
-		var r: UInt8
-		var g: UInt8
-		var b: UInt8
-		var a: UInt8
-	}
-	
-	// size is 5, stride is 8
-	struct Padded: DataRepresentable, Equatable {
-		var value: UInt32
-		var flag: UInt8
-	}
-	
 	// MARK: - Round trips
 	
 	func testPrimitivesRoundTrip() throws {
@@ -105,22 +92,6 @@ class DataStreamTests: XCTestCase {
 		XCTAssertEqual(try readStream.read() as Double, -Double.infinity)
 		XCTAssertTrue((try readStream.read() as Float).isNaN)
 		XCTAssertTrue((try readStream.read() as Double).isNaN)
-	}
-	
-	func testDataRepresentableRoundTrip() throws {
-		let rgba8 = RGBA8(r: 51, g: 65, b: 129, a: 254)
-		let padded = Padded(value: 0x11223344, flag: 0x55)
-		
-		let writeStream = DataWriteStream()
-		try writeStream.write(rgba8)
-		try writeStream.write(padded)
-		let data = try XCTUnwrap(writeStream.data)
-		XCTAssertEqual(data.count, MemoryLayout<RGBA8>.size + MemoryLayout<Padded>.size)
-		
-		let readStream = DataReadStream(data: data)
-		XCTAssertEqual(try readStream.read() as RGBA8, rgba8)
-		XCTAssertEqual(try readStream.read() as Padded, padded)
-		XCTAssertFalse(readStream.hasBytesAvailable)
 	}
 	
 	#if !((os(macOS) || targetEnvironment(macCatalyst)) && arch(x86_64))
@@ -239,17 +210,6 @@ class DataStreamTests: XCTestCase {
 		XCTAssertEqual(try readStream.read() as Bool, false)
 	}
 	
-	func testDataRepresentableUsesHostByteOrder() throws {
-		let padded = Padded(value: 0x11223344, flag: 0x55)
-		let writeStream = DataWriteStream()
-		try writeStream.write(padded)
-		let data = try XCTUnwrap(writeStream.data)
-		
-		var copy = padded
-		let hostBytes = withUnsafeBytes(of: &copy) { Data($0) }
-		XCTAssertEqual(data, hostBytes)
-	}
-	
 	// MARK: - End of stream
 	
 	func testEmptyStream() {
@@ -283,9 +243,26 @@ class DataStreamTests: XCTestCase {
 		XCTAssertThrowsError(try readStream.read(count: 4))
 	}
 	
-	func testReadDataRepresentablePastEndThrows() {
+	func testFailedReadLeavesStreamIntact() throws {
 		let readStream = DataReadStream(data: Data(hexadecimalString: "01 02 03"))
-		XCTAssertThrowsError(try readStream.read() as RGBA8)
+		XCTAssertThrowsError(try readStream.read() as UInt32)
+		XCTAssertThrowsError(try readStream.read(count: 4))
+		XCTAssertEqual(readStream.bytesAvailable, 3)
+		XCTAssertTrue(readStream.hasBytesAvailable)
+		XCTAssertEqual(try readStream.read() as UInt16, 0x0102)
+		XCTAssertEqual(try readStream.read() as UInt8, 0x03)
+		XCTAssertFalse(readStream.hasBytesAvailable)
+	}
+	
+	func testEmptyDataWrite() throws {
+		let writeStream = DataWriteStream()
+		try writeStream.write(Data())
+		try writeStream.write(UInt8(0x7f))
+		XCTAssertEqual(writeStream.data, Data(hexadecimalString: "7f"))
+		
+		let readStream = DataReadStream(data: Data(hexadecimalString: "7f"))
+		XCTAssertEqual(try readStream.read(count: 0), Data())
+		XCTAssertEqual(readStream.bytesAvailable, 1)
 	}
 	
 	// MARK: - CoreGraphics

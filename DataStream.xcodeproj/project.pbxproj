@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
-		CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA95BB528FF408700E54915 /* DataRepresentable.swift */; };
 		CCABD2A61DADCC30009972B4 /* DataStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2A51DADCC30009972B4 /* DataStreamTests.swift */; };
 		CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD2981DADC9CF009972B4 /* DataStream.swift */; };
 		CCABD2AC1DADCCB0009972B4 /* Data+hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */; };
@@ -21,7 +19,6 @@
 
 /* Begin PBXFileReference section */
 		CC7C513E1DAD573100E83DF2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		CCA95BB528FF408700E54915 /* DataRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepresentable.swift; sourceTree = "<group>"; };
 		CCABD2981DADC9CF009972B4 /* DataStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStream.swift; sourceTree = "<group>"; };
 		CCABD29C1DADCACA009972B4 /* Data+hexadecimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+hexadecimal.swift"; sourceTree = "<group>"; };
 		CCABD2A31DADCC30009972B4 /* DataStreamTests_mac.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataStreamTests_mac.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,7 +72,6 @@
 			children = (
 				CCABD2981DADC9CF009972B4 /* DataStream.swift */,
 				CCABD2BB1DADD7F2009972B4 /* DataStream+CG.swift */,
-				CCA95BB528FF408700E54915 /* DataRepresentable.swift */,
 			);
 			path = DataStream;
 			sourceTree = "<group>";
@@ -200,7 +196,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCA95BB628FF408700E54915 /* DataRepresentable.swift in Sources */,
 				CCABD2A61DADCC30009972B4 /* DataStreamTests.swift in Sources */,
 				CCABD2BC1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2AB1DADCCAD009972B4 /* DataStream.swift in Sources */,
@@ -212,7 +207,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCA95BB728FF408700E54915 /* DataRepresentable.swift in Sources */,
 				CCABD2B41DADD359009972B4 /* DataStreamTests.swift in Sources */,
 				CCABD2BD1DADD7F2009972B4 /* DataStream+CG.swift in Sources */,
 				CCABD2B91DADD39C009972B4 /* DataStream.swift in Sources */,

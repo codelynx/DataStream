@@ -45,7 +45,6 @@ Or in Xcode, choose File > Add Package Dependencies… and enter the repository 
 | `CGPoint` | 16 | `x`, `y` as `Double` |
 | `CGSize` | 16 | `width`, `height` as `Double` |
 | `CGAffineTransform` | 48 | `a`, `b`, `c`, `d`, `tx`, `ty` as `Double` |
-| `DataRepresentable` | `MemoryLayout<T>.size` | raw memory, host byte order |
 
 Signed integers use two's complement. The stream byte order is big-endian unless a stream is created with `.littleEndian`. `Float16` is available where the platform provides it, which excludes Intel Macs. The CoreGraphics types are available where CoreGraphics can be imported.
 
@@ -111,11 +110,11 @@ let readStream = DataReadStream(data: data, byteOrder: .littleEndian)
 let value = try readStream.read() as UInt32
 ```
 
-The setting applies to every multi-byte integer and floating point value, including the CoreGraphics types. Single bytes, `Data`, and `DataRepresentable` values are unaffected.
+The setting applies to every multi-byte integer and floating point value, including the CoreGraphics types. Single bytes and `Data` are unaffected.
 
 ## Errors
 
-Reading past the end of the stream throws `DataStreamError.readError`. A failed write throws `DataStreamError.writeError`.
+Reading past the end of the stream throws `DataStreamError.readError` and consumes nothing, so the remaining bytes can still be read. A failed write throws `DataStreamError.writeError`.
 
 ```swift
 do {
@@ -164,54 +163,6 @@ let point = try readStream.read() as CGPoint
 let size = try readStream.read() as CGSize
 let transform = try readStream.read() as CGAffineTransform
 ```
-
-## Custom Data
-
-Fixed-size structs can be written and read as a single value by conforming them to `DataRepresentable`. The default implementation copies the raw memory of the value, so it is only suitable for plain structs made of fixed-size fields.
-
-```swift
-import CoreLocation
-
-struct RGBA8: DataRepresentable {
-	var r: UInt8
-	var g: UInt8
-	var b: UInt8
-	var a: UInt8
-}
-
-extension CLLocationCoordinate2D: DataRepresentable {
-}
-```
-
-Write them like any other value.
-
-```swift
-let rgba8: RGBA8 = ...
-let location: CLLocationCoordinate2D = ...
-try writeStream.write(rgba8)
-try writeStream.write(location)
-```
-
-And read them back.
-
-```swift
-let rgba8 = try readStream.read() as RGBA8
-let location = try readStream.read() as CLLocationCoordinate2D
-```
-
-Types containing strings, classes, or other variable-length data must not conform to `DataRepresentable`. Their raw memory holds pointers, not the content.
-
-```swift
-struct Foo: DataRepresentable {
-	var name: String    // not suitable: String is not fixed-size
-	var number: NSNumber // not suitable: classes are references
-}
-```
-
-Two caveats apply to `DataRepresentable` values:
-
-- They are written in host byte order, unlike the primitive overloads. Data containing them is only portable between hosts of the same endianness.
-- Any padding bytes inside the struct are written as well, and their contents are unspecified. Two equal values can therefore produce different bytes, so do not compare or hash the output. Ordering fields from largest to smallest avoids padding in most cases.
 
 ## License
 

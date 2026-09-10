@@ -79,20 +79,15 @@ public class DataReadStream {
 		return self.bytes - self.offset
 	}
 	
-	public func readBytes<T>() throws -> T {
+	private func readBytes<T>() throws -> T {
 		let valueSize = MemoryLayout<T>.size
+		guard valueSize <= self.bytesAvailable else { throw DataStreamError.readError }
 		var buffer = [UInt8](repeating: 0, count: valueSize)
-		let value: T = try buffer.withUnsafeMutableBytes { mutableRawBufferPointer throws -> T in
-			let bufferPointer: UnsafeMutablePointer<UInt8> = mutableRawBufferPointer.baseAddress!.assumingMemoryBound(to: UInt8.self)
-			if self.inputStream.read(bufferPointer, maxLength: valueSize) != valueSize {
-				throw DataStreamError.readError
-			}
-			return bufferPointer.withMemoryRebound(to: T.self, capacity: 1) {
-				return $0.pointee
-			}
+		if self.inputStream.read(&buffer, maxLength: valueSize) != valueSize {
+			throw DataStreamError.readError
 		}
 		self.offset += valueSize
-		return value
+		return buffer.withUnsafeBytes { $0.loadUnaligned(as: T.self) }
 	}
 	
 	private func readInteger<T: FixedWidthInteger>() throws -> T {
@@ -143,18 +138,15 @@ public class DataReadStream {
 		return Float16(bitPattern: try self.readInteger())
 	}
 	#endif
-	public func read<T: DataRepresentable>() throws -> T {
-		let binary = try self.read(count: MemoryLayout<T>.size)
-		return try binary.instanciate(as: T.self)
-	}
 	
 	public func read(count: Int) throws -> Data {
+		guard count >= 0, count <= self.bytesAvailable else { throw DataStreamError.readError }
 		var buffer = [UInt8](repeating: 0, count: count)
 		if self.inputStream.read(&buffer, maxLength: count) != count {
 			throw DataStreamError.readError
 		}
-		offset += count
-		return NSData(bytes: buffer, length: buffer.count) as Data
+		self.offset += count
+		return Data(buffer)
 	}
 	
 	public func read() throws -> Bool {
@@ -188,7 +180,7 @@ public class DataWriteStream {
 		return self.outputStream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data
 	}
 	
-	public func writeBytes<T>(_ value: T) throws {
+	private func writeBytes<T>(_ value: T) throws {
 		let valueSize = MemoryLayout<T>.size
 		var value = value
 		let result = withUnsafeBytes(of: &value) { rawBufferPointer in
@@ -245,13 +237,10 @@ public class DataWriteStream {
 		try writeInteger(value.bitPattern)
 	}
 	#endif
-	public func write<T: DataRepresentable>(_ value: T) throws {
-		let binary = value.dataRepresentation
-		try self.write(binary)
-	}
 	public func write(_ data: Data) throws {
+		if data.isEmpty { return }
 		let bytesWritten = data.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> Int in
-			return outputStream.write(Array(pointer.bindMemory(to: UInt8.self)), maxLength: data.count)
+			return outputStream.write(pointer.baseAddress!.assumingMemoryBound(to: UInt8.self), maxLength: data.count)
 		}
 		if bytesWritten != data.count { throw DataStreamError.writeError }
 	}
